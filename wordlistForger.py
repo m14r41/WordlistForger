@@ -5,7 +5,7 @@ import string
 import sys
 import time
 from math import prod
-VERSION = "1.0.4"
+VERSION = "1.0.7"
 
 # =========================
 # Colors
@@ -139,23 +139,46 @@ def progress(current, total, start_time):
 def main():
     print(BANNER)
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--pattern", required=True)
-    parser.add_argument("-l", "--limit", type=int, required=True)
-    parser.add_argument("--lock")
-    parser.add_argument("--lock-mask")
-    parser.add_argument("--strict-case", action="store_true")
-    parser.add_argument("--match-pattern", action="store_true")
-    parser.add_argument("-s", "--seed", type=int)
-    parser.add_argument("-o", "--output", default="wordlist.txt")
-    parser.add_argument("--live", action="store_true")
-    parser.add_argument("-v", "--version", action="version", version=f"wordlistForger : {VERSION}")
+    parser = argparse.ArgumentParser(
+        prog="wordlistforger",
+        add_help=False,
+        description="WordlistForger - Advanced wordlist generator tool",
+        epilog="""
+       \033[96mFull documentation at : \033[92mhttps://github.com/m14r41/WordlistForger\033[0m   
+        Example: 
+        wordlistForger -p api_key7m9xq2kpl4 -l 10 --strict-case
+        wordlistforger -p pass123 -l 20 --live
+        wordlistForger -p api_key7m9xq2kpl4 -l 10  --lock api_key --live -o api.list
+        wordlistForger -p ODER-ID-1943AC -l 10 --lock ODER-ID --strict-case --live
+        """,
+    formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
+    parser.add_argument("-h", "--help", action="help", help="")
+
+    parser.add_argument("-p", "--pattern", required=True, help="Pattern to generate wordlist from")
+    parser.add_argument("-l", "--limit", type=int, required=True, help="Number of words to generate")
+
+    parser.add_argument("--lock", help="Lock specific string inside pattern")
+    parser.add_argument("--lock-mask", help="Mask fixed characters in pattern (use 'x' for free positions)")
+
+    parser.add_argument("--strict-case", action="store_true", help="Respect case sensitivity strictly")
+    parser.add_argument("--match-pattern", action="store_true", help="Use pattern-based character rules")
+
+    parser.add_argument("-s", "--seed", type=int, help="Random seed for reproducibility")
+    parser.add_argument("-o", "--output", default="wordlist.txt", help="Output file name")
+
+    parser.add_argument("--live", action="store_true", help="Show generated output in real-time")
+
+    parser.add_argument(
+        "-v", "--version",
+        action="version",
+        version=f"wordlistForger {VERSION}"
+    )
 
     args = parser.parse_args()
 
     start = time.time()
-
     # =========================
     # INFO  
     # =========================
